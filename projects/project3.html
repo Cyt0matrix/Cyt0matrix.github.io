@@ -26,25 +26,24 @@
                 Bridge the gap between detection alerts and operational response by authoring a formal Security Operations Center (SOC) Incident Report (INC-2026-001) for host discovery activities.
             </p>
 
-            <h2 style="margin-top: 40px;">Incident Overview</h2>
+            <h2 style="margin-top: 40px;">Incident Overview (INC-2026-001)</h2>
             <ul style="color: var(--muted); margin-left: 20px; margin-bottom: 20px;">
-                <li><strong>Incident ID:</strong> INC-2026-001</li>
                 <li><strong>Severity:</strong> Medium</li>
                 <li><strong>Detection Source:</strong> Splunk SIEM Alert (<code>Suspicious Host Enumeration Activity</code>)</li>
                 <li><strong>Affected Asset:</strong> Windows 10 Endpoint (`192.168.0.3`)</li>
                 <li><strong>Detection Vector:</strong> Sysmon Event ID 1 (Process Creation) matching reconnaissance binaries.</li>
             </ul>
 
-            <h2 style="margin-top: 40px;">Analyst Triage Workflow</h2>
-            <p>
-                <strong>Step 1 - Alert Validation:</strong> Reviewed the triggered alert in Splunk Web, noting multiple discovery commands executing in rapid succession.<br>
-                <strong>Step 2 - Raw Telemetry Query:</strong> Executed dynamic regex parsing to isolate command-line parameters and confirm process execution paths.<br>
-                <strong>Step 3 - Scope & Context Analysis:</strong> Inspected parent process artifacts and user context to distinguish authorized administrative tasks from malicious internal reconnaissance.
-            </p>
+            <h2 style="margin-top: 40px;">Analyst Triage & Investigation Steps</h2>
+            <ul style="color: var(--muted); margin-left: 20px; margin-bottom: 20px;">
+                <li><strong>Step 1 (Alert Validation):</strong> Reviewed triggered alert data indicating rapid sequence execution of host discovery binaries.</li>
+                <li><strong>Step 2 (Telemetry Extraction):</strong> Utilized regex SPL parsing to verify exact command-line arguments and user execution context.</li>
+                <li><strong>Step 3 (Context & Scope):</strong> Analyzed parent processes and user privileges to evaluate threat severity.</li>
+            </ul>
 
             <h2 style="margin-top: 40px;">Conclusion & Remediation</h2>
             <p>
-                Classified the event as a <strong>Controlled Simulation (True Positive - Authorized Testing)</strong>. Verified that detection engineering controls successfully identified post-compromise enumeration behavior without generating false positive fatigue.
+                Classified as a <strong>Controlled Simulation (True Positive - Authorized Testing)</strong>. Confirmed detection efficacy without generating false positive fatigue.
             </p>
         </section>
     </main>
