@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 1: SIEM Architecture | Cyt0matrix Portfolio</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="../index.html" class="logo">Cyt0matrix<span>.</span></a>
+            <ul>
+                <li><a href="../index.html#projects">&larr; Back to Portfolio</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main style="padding-top: 60px; padding-bottom: 60px;">
+        <section>
+            <h1>Project 1: SIEM Architecture & Windows Telemetry Ingestion</h1>
+            <p style="color: var(--accent); font-weight: bold; margin-bottom: 24px;">Category: SIEM Engineering & Telemetry Pipeline</p>
+            
+            <h2>Objective</h2>
+            <p>
+                Design and deploy a centralized security monitoring lab from scratch to gain deep technical mastery of SIEM architecture, log ingestion pipelines, and endpoint sensor deployment without relying on automated setup scripts.
+            </p>
+
+            <h2 style="margin-top: 40px;">Environment & Architecture</h2>
+            <p>
+                Built a multi-node virtualized lab environment separating the SIEM backend from the monitored endpoint:
+            </p>
+            <ul style="color: var(--muted); margin-left: 20px; margin-bottom: 20px;">
+                <li><strong>SIEM Backend:</strong> Splunk Enterprise hosted on Ubuntu (`192.168.0.2`).</li>
+                <li><strong>Monitored Endpoint:</strong> Windows 10 virtual machine (`192.168.0.3`).</li>
+                <li><strong>Forwarder Agent:</strong> Splunk Universal Forwarder shipping telemetry across raw TCP port <code>9997</code>.</li>
+                <li><strong>Endpoint Sensor:</strong> Microsoft Sysmon configured with <code>renderXml=true</code> for granular process and command-line tracking.</li>
+            </ul>
+
+            <h2 style="margin-top: 40px;">Key Technical Challenges & Resolution</h2>
+            <p>
+                During initial deployment, configuring the Universal Forwarder with the Ubuntu IP inside the <strong>Deployment Server</strong> field caused HTTPS connection loops and <code>502</code> errors. Because the deployment server expects management handshakes over port <code>8089</code> while raw data streams over port <code>9997</code>, this conflict broke the data pipeline.
+            </p>
+            <p>
+                <strong>The Fix:</strong> Left the deployment server field blank during installation and manually configured receiver routing via local configuration files (`outputs.conf` and `inputs.conf`), successfully establishing a stable log stream into the `windows_logs` index.
+            </p>
+
+            <h2 style="margin-top: 40px;">Validation</h2>
+            <p>
+                Confirmed end-to-end ingestion stability by verifying event counts and executing initial validation commands on the Windows endpoint.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Shubham | Built with HTML, CSS &amp; GitHub Pages</p>
+    </footer>
+</body>
+</html>
