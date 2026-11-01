@@ -27,9 +27,6 @@
             </p>
 
             <h2 style="margin-top: 40px;">Environment & Architecture</h2>
-            <p>
-                Built a multi-node virtualized lab environment separating the SIEM backend from the monitored endpoint:
-            </p>
             <ul style="color: var(--muted); margin-left: 20px; margin-bottom: 20px;">
                 <li><strong>SIEM Backend:</strong> Splunk Enterprise hosted on Ubuntu (`192.168.0.2`).</li>
                 <li><strong>Monitored Endpoint:</strong> Windows 10 virtual machine (`192.168.0.3`).</li>
@@ -37,18 +34,20 @@
                 <li><strong>Endpoint Sensor:</strong> Microsoft Sysmon configured with <code>renderXml=true</code> for granular process and command-line tracking.</li>
             </ul>
 
-            <h2 style="margin-top: 40px;">Key Technical Challenges & Resolution</h2>
+            <h2 style="margin-top: 40px;">Technical Challenge & Resolution</h2>
             <p>
-                During initial deployment, configuring the Universal Forwarder with the Ubuntu IP inside the <strong>Deployment Server</strong> field caused HTTPS connection loops and <code>502</code> errors. Because the deployment server expects management handshakes over port <code>8089</code> while raw data streams over port <code>9997</code>, this conflict broke the data pipeline.
+                Configuring the Universal Forwarder with the Ubuntu IP inside the deployment server field caused HTTPS connection loops and <code>502</code> errors due to port management conflicts between port <code>8089</code> (management handshake) and port <code>9997</code> (raw data stream).
             </p>
             <p>
-                <strong>The Fix:</strong> Left the deployment server field blank during installation and manually configured receiver routing via local configuration files (`outputs.conf` and `inputs.conf`), successfully establishing a stable log stream into the `windows_logs` index.
+                <strong>Solution:</strong> Left the deployment server field blank and manually configured receiver routing via local configuration files.
             </p>
+            
+            <h3 style="margin-top: 20px; color: var(--text);">Configuration Artifact (`outputs.conf`)</h3>
+            <pre style="background: var(--surface); border: 1px solid var(--border); padding: 16px; border-radius: 6px; color: var(--accent); overflow-x: auto; margin-bottom: 20px;"><code>[tcpout]
+defaultGroup = default-rew-server
 
-            <h2 style="margin-top: 40px;">Validation</h2>
-            <p>
-                Confirmed end-to-end ingestion stability by verifying event counts and executing initial validation commands on the Windows endpoint.
-            </p>
+[tcpout:default-rew-server]
+server = 192.168.0.2:9997</code></pre>
         </section>
     </main>
 
