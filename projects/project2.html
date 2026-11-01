@@ -26,26 +26,22 @@
                 Transition from passive log collection to active detection engineering by writing precise Splunk Processing Language (SPL) queries, overcoming XML-rendering extraction challenges, and converting queries into threshold-based SOC alerts.
             </p>
 
-            <h2 style="margin-top: 40px;">Attack Simulation</h2>
+            <h2 style="margin-top: 40px;">Attack Simulation & Telemetry</h2>
             <p>
-                Simulated post-compromise reconnaissance and execution techniques on the Windows endpoint to generate authentic telemetry:
+                Executed discovery commands (<code>whoami /all</code>, <code>ipconfig /all</code>, <code>net user</code>) to simulate post-compromise reconnaissance and generate raw Sysmon Event ID 1 telemetry.
             </p>
-            <ul style="color: var(--muted); margin-left: 20px; margin-bottom: 20px;">
-                <li>Host enumeration commands: <code>whoami /all</code>, <code>ipconfig /all</code>, and <code>net user</code>.</li>
-                <li>Obfuscated execution using Base64-encoded PowerShell commands (<code>-EncodedCommand</code>).</li>
-            </ul>
 
             <h2 style="margin-top: 40px;">Detection Logic & Regular Expression Parsing</h2>
             <p>
-                Because Sysmon logs were rendered in XML format (`renderXml = true`), standard field extractions required dynamic regex parsing to cleanly extract command-line arguments. The final production SPL query used for detection:
+                Because logs rendered in XML format (<code>renderXml = true</code>), standard fields required dynamic regular expression extraction to isolate arguments.
             </p>
             <pre style="background: var(--surface); border: 1px solid var(--border); padding: 16px; border-radius: 6px; color: var(--accent); overflow-x: auto; margin-bottom: 20px;"><code>index="windows_logs" (whoami OR ipconfig OR "net user")
 | rex field=_raw "&lt;Data Name=\"CommandLine\"&gt;(?&lt;cmd&gt;[^&lt;]+)&lt;/Data&gt;"
 | table _time Hostname Image cmd User</code></pre>
 
-            <h2 style="margin-top: 40px;">SOC Alert Configuration</h2>
+            <h2 style="margin-top: 40px;">SOC Alert Automation</h2>
             <p>
-                Converted the query into an automated threshold-based alert named <code>Suspicious Host Enumeration Activity</code> configured to trigger when results exceed zero, writing structured event logs back into the SIEM index for analyst triage.
+                Converted the query into an automated threshold alert named <code>Suspicious Host Enumeration Activity</code> configured to log structured events back into the SIEM index when results exceed zero.
             </p>
         </section>
     </main>
