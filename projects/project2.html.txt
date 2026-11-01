@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 2: Detection Engineering | Cyt0matrix Portfolio</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="../index.html" class="logo">Cyt0matrix<span>.</span></a>
+            <ul>
+                <li><a href="../index.html#projects">&larr; Back to Portfolio</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main style="padding-top: 60px; padding-bottom: 60px;">
+        <section>
+            <h1>Project 2: Detection Engineering & Custom SPL Alerts</h1>
+            <p style="color: var(--accent); font-weight: bold; margin-bottom: 24px;">Category: Detection Engineering & Threat Analytics</p>
+            
+            <h2>Objective</h2>
+            <p>
+                Transition from passive log collection to active detection engineering by writing precise Splunk Processing Language (SPL) queries, overcoming XML-rendering extraction challenges, and converting queries into threshold-based SOC alerts.
+            </p>
+
+            <h2 style="margin-top: 40px;">Attack Simulation</h2>
+            <p>
+                Simulated post-compromise reconnaissance and execution techniques on the Windows endpoint to generate authentic telemetry:
+            </p>
+            <ul style="color: var(--muted); margin-left: 20px; margin-bottom: 20px;">
+                <li>Host enumeration commands: <code>whoami /all</code>, <code>ipconfig /all</code>, and <code>net user</code>.</li>
+                <li>Obfuscated execution using Base64-encoded PowerShell commands (<code>-EncodedCommand</code>).</li>
+            </ul>
+
+            <h2 style="margin-top: 40px;">Detection Logic & Regular Expression Parsing</h2>
+            <p>
+                Because Sysmon logs were rendered in XML format (`renderXml = true`), standard field extractions required dynamic regex parsing to cleanly extract command-line arguments. The final production SPL query used for detection:
+            </p>
+            <pre style="background: var(--surface); border: 1px solid var(--border); padding: 16px; border-radius: 6px; color: var(--accent); overflow-x: auto; margin-bottom: 20px;"><code>index="windows_logs" (whoami OR ipconfig OR "net user")
+| rex field=_raw "&lt;Data Name=\"CommandLine\"&gt;(?&lt;cmd&gt;[^&lt;]+)&lt;/Data&gt;"
+| table _time Hostname Image cmd User</code></pre>
+
+            <h2 style="margin-top: 40px;">SOC Alert Configuration</h2>
+            <p>
+                Converted the query into an automated threshold-based alert named <code>Suspicious Host Enumeration Activity</code> configured to trigger when results exceed zero, writing structured event logs back into the SIEM index for analyst triage.
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Shubham | Built with HTML, CSS &amp; GitHub Pages</p>
+    </footer>
+</body>
+</html>
